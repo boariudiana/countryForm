@@ -1,0 +1,30 @@
+.mainLayout {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 24px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contentSpace {
+  width: 100%;
+}
+
+.pageTitle {
+  text-align: center;
+  margin: 0;
+}
+
+.errorMessage {
+  text-align: center;
+  margin-top: 2rem;
+}
