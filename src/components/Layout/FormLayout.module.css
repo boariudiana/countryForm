@@ -1,0 +1,31 @@
+.container {
+  min-height: 100vh;
+  background: var(--ant-color-bg-layout);
+}
+
+.content {
+  padding: 24px;
+}
+
+.wrapper {
+ 
+  margin: 0 auto;
+}
+
+.card {
+  padding: 24px;
+  background: var(--ant-color-bg-container);
+  border-radius: var(--ant-border-radius-lg);
+  box-shadow: var(--ant-box-shadow);
+  margin-top: 24px;
+}
+
+/* Add styles for the steps */
+.formContent :global(.ant-steps) {
+  padding: 0 24px;
+}
+
+.formContent :global(.ant-steps-item-title) {
+  font-size: 14px;
+  white-space: nowrap;
+} 

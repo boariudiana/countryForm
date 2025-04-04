@@ -1,51 +1,60 @@
-import { Card, Col, Row, Typography, Layout, Space, Skeleton, Result } from 'antd';
+import { Button, Form, Space } from 'antd';
+import { useState } from 'react';
 import styles from './App.module.css';
-import { useCountries } from './queries/countries';
+import CountryStep from './components/steps/CountryStep';
+import FormLayout from './components/Layout/FormLayout';
+import type { FormData } from './types/form';
 
-const { Text } = Typography;
-const { Content } = Layout;
+export default function App() {
+  const [form] = Form.useForm<FormData>();
+  const [currentStep, setCurrentStep] = useState(0);
 
-function App() {
-  const { data: countries, isLoading, error } = useCountries();
+  const handleFinish = (values: FormData) => {
+    console.log('Form values:', values);
+  };
 
-  if (error) return (
-    <Layout className={styles.mainLayout}>
-      <Content className={styles.mainContent}>
-        <Result
-          status="error"
-          title="Failed to fetch countries"
-          subTitle={(error as Error).message}
-        />
-      </Content>
-    </Layout>
-  );
+  const next = async () => {
+    try {
+      await form.validateFields();
+      setCurrentStep(prev => prev + 1);
+    } catch (error) {
+      console.error('Validation failed:', error);
+    }
+  };
+
+  const prev = () => {
+    setCurrentStep(prev => prev - 1);
+  };
 
   return (
-    <Layout className={styles.mainLayout}>
-      <Content className={styles.mainContent}>
-        <Space direction="vertical" size="large" className={styles.contentSpace}>
-          <Typography.Title level={1}>Countries List</Typography.Title>
-          <Skeleton loading={isLoading} active>
-            <Row gutter={[16, 16]}>
-              {countries?.slice(0, 10).map((country) => (
-                <Col xs={24} sm={12} md={8} lg={6} key={country.name.common}>
-                  <Card 
-                    title={<Typography.Title level={4}>{country.name.common}</Typography.Title>}
-                    hoverable
-                  >
-                    <Space direction="vertical">
-                      <Text strong>Capital:</Text> {country.capital?.[0] || 'N/A'}
-                      <Text strong>Population:</Text> {country.population.toLocaleString()}
-                    </Space>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </Skeleton>
-        </Space>
-      </Content>
-    </Layout>
+    <div className={styles.root}>
+      <FormLayout currentStep={currentStep}>
+        <Form 
+          form={form} 
+          onFinish={handleFinish} 
+          layout="vertical"
+        >
+          <div>
+            {currentStep === 0 && <CountryStep />}
+          </div>
+          <div className={styles.stepsAction}>
+            <Space>
+              {currentStep > 0 && (
+                <Button onClick={prev}>Previous</Button>
+              )}
+              {currentStep < 4 ? (
+                <Button type="primary" onClick={next}>
+                  Next
+                </Button>
+              ) : (
+                <Button type="primary" onClick={() => form.submit()}>
+                  Submit
+                </Button>
+              )}
+            </Space>
+          </div>
+        </Form>
+      </FormLayout>
+    </div>
   );
 }
-
-export default App;

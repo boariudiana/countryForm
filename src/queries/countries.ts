@@ -1,35 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { api } from '../services/api';
+import type { COUNTRIES } from '../config/countries';
 
-const QueryNames = {
-  list: 'countries-list',
-  details: 'country-details',
-} as const;
-
-interface Country {
-  name: {
-    common: string;
-  };
-  capital?: string[];
-  population: number;
-}
+type Country = typeof COUNTRIES[number];
 
 export const useCountries = () => {
   return useQuery<Country[]>({
-    queryKey: [QueryNames.list],
+    queryKey: ['countries'],
     queryFn: async () => {
-      const { data } = await axios.get('https://restcountries.com/v3.1/all');
-      return data;
+      const response = await api.getCountries();
+      return [...response.data];
     },
   });
 };
-
-export const useCountry = (countryName: string) => {
-  return useQuery<Country>({
-    queryKey: [QueryNames.details, countryName],
-    queryFn: async () => {
-      const { data } = await axios.get(`https://restcountries.com/v3.1/name/${countryName}`);
-      return data[0];
-    },
-  });
-}; 
