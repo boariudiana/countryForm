@@ -37,6 +37,10 @@ const PersonalInformationStep = () => {
             options={regionOptions} 
             loading={isLoading}
             showSearch
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            optionFilterProp="label"
           />
         ) : (
           <Input />

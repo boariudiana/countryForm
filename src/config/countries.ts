@@ -1,4 +1,5 @@
 import { validationRules, getValidationMessage } from '../utils/validation';
+import type { Rule } from 'antd/es/form';
 
 export const COUNTRIES = [
   {
@@ -28,7 +29,12 @@ export const COUNTRIES = [
         rules: [
           { required: true, message: 'ZIP Code is required' },
           { 
-            validator: (value: string) => validationRules.zipCode(value),
+            validator: (_: Rule, value: string) => {
+              if (!value) return Promise.reject(new Error('Value is required'));
+              return validationRules.zipCode(value) 
+                ? Promise.resolve() 
+                : Promise.reject(new Error('Invalid PIN code'));
+            },
             message: () => getValidationMessage('zipCode')
           }
         ]
@@ -91,7 +97,12 @@ export const COUNTRIES = [
         rules: [
           { required: true, message: 'PIN code is required' },
           { 
-            validator: (value: string) => validationRules.pinCode(value),
+            validator: (_: Rule, value: string) => {
+              if (!value) return Promise.reject(new Error('Value is required'));
+              return validationRules.pinCode(value) 
+                ? Promise.resolve() 
+                : Promise.reject(new Error('Invalid postal code'));
+            },
             message: () => getValidationMessage('pinCode')
           }
         ]
@@ -125,7 +136,12 @@ export const COUNTRIES = [
         rules: [
           { required: true, message: 'Postal code is required' },
           { 
-            validator: (value: string) => validationRules.postleitzahl(value),
+            validator: (_: Rule, value: string) => {
+              if (!value) return Promise.reject(new Error('Value is required'));
+              return validationRules.postleitzahl(value) 
+                ? Promise.resolve() 
+                : Promise.reject(new Error('Invalid postal code'));
+            },
             message: () => getValidationMessage('postleitzahl')
           }
         ]
@@ -159,7 +175,12 @@ export const COUNTRIES = [
         rules: [
           { required: true, message: 'Postal code is required' },
           { 
-            validator: (value: string) => validationRules.postalCode(value),
+            validator: (_: Rule, value: string) => {
+              if (!value) return Promise.reject(new Error('Value is required'));
+              return validationRules.postalCode(value) 
+                ? Promise.resolve() 
+                : Promise.reject(new Error('Invalid postal code'));
+            },
             message: () => getValidationMessage('postalCode')
           }
         ]
