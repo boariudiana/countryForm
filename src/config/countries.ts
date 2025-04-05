@@ -2,7 +2,7 @@ import { validationRules, getValidationMessage } from '../utils/validation';
 
 export const COUNTRIES = [
   {
-    code: 'USA',
+    code: 'US',
     name: 'United States',
     fields: {
       personalId: {
@@ -36,7 +36,7 @@ export const COUNTRIES = [
     }
   },
   {
-    code: 'UAE',
+    code: 'AE',
     name: 'United Arab Emirates',
     fields: {
       personalId: {
@@ -65,7 +65,7 @@ export const COUNTRIES = [
     }
   },
   {
-    code: 'IND',
+    code: 'IN',
     name: 'India',
     fields: {
       personalId: {
@@ -99,7 +99,7 @@ export const COUNTRIES = [
     }
   },
   {
-    code: 'DEU',
+    code: 'DE',
     name: 'Germany',
     fields: {
       personalId: {
@@ -133,7 +133,7 @@ export const COUNTRIES = [
     }
   },
   {
-    code: 'CAN',
+    code: 'CA',
     name: 'Canada',
     fields: {
       personalId: {
@@ -166,4 +166,4 @@ export const COUNTRIES = [
       }
     }
   }
-] as const; 
+]; 

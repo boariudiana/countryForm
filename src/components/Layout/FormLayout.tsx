@@ -1,4 +1,4 @@
-import { Layout, Steps } from 'antd';
+import { Layout, Space, Steps } from 'antd';
 import { StepType } from '../../types/form';
 import styles from './FormLayout.module.css';
 
@@ -21,15 +21,17 @@ const FormLayout: React.FC<FormLayoutProps> = ({ currentStep, children }) => {
   return (
     <Layout className={styles.container}>
       <Content className={styles.content}>
-        <div className={styles.wrapper}>
+        <Space direction="vertical" size={36}>
           <Steps
             current={currentStep}
             items={steps.map(({ title }) => ({ title }))}
+            responsive
+            labelPlacement="vertical"
           />
           <div className={styles.card}>
             {children}
           </div>
-        </div>
+        </Space>
       </Content>
     </Layout>
   );

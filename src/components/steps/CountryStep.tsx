@@ -7,7 +7,7 @@ const CountryStep = () => {
 
   return (
     <Form.Item
-      name="country"
+      name="countryCode"
       label="Select Country"
       rules={[{ required: true, message: 'Please select a country' }]}
     >

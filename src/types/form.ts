@@ -3,7 +3,7 @@ import { COUNTRIES } from '../config/countries';
 export type CountryCode = typeof COUNTRIES[number]['code'];
 
 export interface FormData {
-  country: CountryCode;
+  countryCode: CountryCode;
   personalInfo: {
     [key: string]: string;
   };

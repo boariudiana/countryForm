@@ -2,6 +2,10 @@ import { Button, Form, Space } from 'antd';
 import { useState } from 'react';
 import styles from './App.module.css';
 import CountryStep from './components/steps/CountryStep';
+import PersonalInformationStep from './components/steps/PersonalInformationStep';
+import DocumentsStep from './components/steps/DocumentsStep';
+import ProfileImageStep from './components/steps/ProfileImageStep';
+import ReviewStep from './components/steps/ReviewStep';
 import FormLayout from './components/Layout/FormLayout';
 import type { FormData } from './types/form';
 
@@ -26,6 +30,19 @@ export default function App() {
     setCurrentStep(prev => prev - 1);
   };
 
+ 
+  const selectedCountryCode = form.getFieldValue('countryCode');
+
+  const steps = [
+    { title: 'Country', content: <CountryStep /> },
+    { title: 'Personal Information', content: <PersonalInformationStep/> },
+    { title: 'Documents', content: <DocumentsStep countryCode={selectedCountryCode} /> },
+    { title: 'Profile Image', content: <ProfileImageStep /> },
+    { title: 'Review', content: <ReviewStep  /> }
+  ];
+
+  const currentStepConfig = steps[currentStep];
+
   return (
     <div className={styles.root}>
       <FormLayout currentStep={currentStep}>
@@ -35,14 +52,14 @@ export default function App() {
           layout="vertical"
         >
           <div>
-            {currentStep === 0 && <CountryStep />}
+            {currentStepConfig?.content}
           </div>
           <div className={styles.stepsAction}>
             <Space>
               {currentStep > 0 && (
                 <Button onClick={prev}>Previous</Button>
               )}
-              {currentStep < 4 ? (
+              {currentStep < steps.length - 1 ? (
                 <Button type="primary" onClick={next}>
                   Next
                 </Button>
