@@ -30,13 +30,11 @@ export default function App() {
     setCurrentStep(prev => prev - 1);
   };
 
- 
-  const selectedCountryCode = form.getFieldValue('countryCode');
 
   const steps = [
     { title: 'Country', content: <CountryStep /> },
     { title: 'Personal Information', content: <PersonalInformationStep/> },
-    { title: 'Documents', content: <DocumentsStep countryCode={selectedCountryCode} /> },
+    { title: 'Documents', content: <DocumentsStep /> },
     { title: 'Profile Image', content: <ProfileImageStep /> },
     { title: 'Review', content: <ReviewStep  /> }
   ];

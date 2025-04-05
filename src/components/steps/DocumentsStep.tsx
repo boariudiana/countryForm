@@ -1,11 +1,10 @@
 import { Form, Input } from 'antd';
 import { COUNTRIES } from '../../config/countries';
 
-interface DocumentsStepProps {
-  countryCode: string;
-}
 
-const DocumentsStep = ({ countryCode }: DocumentsStepProps) => {
+const DocumentsStep = () => {
+  const form = Form.useFormInstance();
+  const countryCode = form.getFieldValue('countryCode');
   const selectedCountry = COUNTRIES.find(c => c.code === countryCode);
   
   if (!selectedCountry) {
@@ -42,7 +41,6 @@ const DocumentsStep = ({ countryCode }: DocumentsStepProps) => {
         name={['personalInfo', fields.personalId.name]}
         label={fields.personalId.label}
         rules={fields.personalId.rules}
-        extra={`Please enter a valid ${getDocumentLabel()}`}
       >
         <Input />
       </Form.Item>
