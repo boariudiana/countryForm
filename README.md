@@ -1,3 +1,36 @@
+# Country Form Application
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Set up environment variables:
+   - Copy `.env.example` to `.env`:
+     ```bash
+     cp .env.example .env
+     ```
+   - Register for a Geonames API account at http://www.geonames.org/login
+   - Edit `.env` and replace `your_username_here` with your Geonames API username
+
+## Running the Application
+
+Development:
+```bash
+npm run dev
+```
+
+Build:
+```bash
+npm run build
+```
+
+## Environment Variables
+
+- `VITE_GEONAMES_USERNAME`: Your Geonames API username (required for country region data)
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

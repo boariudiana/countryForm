@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { COUNTRIES } from '../config/countries';
+import env from '../config/env';
 
 // Simulating API delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -19,6 +20,17 @@ export interface Country {
 export interface Region {
   value: string;
   label: string;
+}
+
+interface GeonamesRegion {
+  geonameId: number;
+  name: string;
+  adminCode1: string;
+  countryCode: string;
+}
+
+interface GeonamesResponse {
+  geonames: GeonamesRegion[];
 }
 
 export const api = {
@@ -46,16 +58,52 @@ export const api = {
   },
 
   getRegions: async (countryCode: string): Promise<Region[]> => {
-    const response = await axios.get(`${BASE_URL}/alpha/${countryCode}`);
-    const country = response.data[0];
-    console.log('Country: from api', country);
-    // Convert API response to consistent Region format
-    const regions = country.subdivisions || {};
-    console.log('Regions: from api', regions);
-    return Object.entries(regions).map(([code, name]) => ({
-      value: code,
-      label: name as string
-    }));
+    try {
+      const username = env.GEONAMES_USERNAME;
+      if (!username) {
+        throw new Error('Geonames API username is not configured');
+      }
+
+      // First get the country's geonameId
+      const countrySearch = await axios.get<GeonamesResponse>(`http://api.geonames.org/searchJSON`, {
+        params: {
+          country: countryCode,
+          username,
+          style: 'FULL',
+          maxRows: 1
+        }
+      });
+
+      if (!countrySearch.data.geonames || countrySearch.data.geonames.length === 0) {
+        throw new Error(`Country not found: ${countryCode}`);
+      }
+
+      const countryGeonameId = countrySearch.data.geonames[0].geonameId;
+      console.log(`GeonameId for ${countryCode}:`, countryGeonameId);
+
+      // Now get the subdivisions using the country's geonameId
+      const response = await axios.get<GeonamesResponse>(`http://api.geonames.org/childrenJSON`, {
+        params: {
+          geonameId: countryGeonameId,
+          username,
+          style: 'FULL'
+        }
+      });
+      
+      console.log('Geonames response:', response.data);
+      
+      if (!response.data.geonames || response.data.geonames.length === 0) {
+        throw new Error(`No subdivisions found for ${countryCode}`);
+      }
+
+      return response.data.geonames.map((region) => ({
+        value: region.geonameId.toString(),
+        label: region.name
+      }));
+    } catch (error) {
+      console.error('Error fetching regions:', error);
+      throw error; 
+    }
   }
 }; 
 
