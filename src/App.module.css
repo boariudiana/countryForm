@@ -3,6 +3,23 @@
   display: flex;
 }
 
+.container {
+  min-height: 100vh;
+  background: var(--ant-color-bg-layout);
+  padding: 24px;
+}
+
+.content {
+  margin: 0 auto;
+}
+
+
+.card {
+  background: var(--ant-color-bg-container);
+  border-radius: var(--ant-border-radius-lg);
+  box-shadow: var(--ant-box-shadow);
+}
+
 .contentSpace {
   padding: 24px;
   background: #fff;

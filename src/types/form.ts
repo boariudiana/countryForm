@@ -10,4 +10,4 @@ export interface FormData {
   profileImage?: File;
 }
 
-export type StepType = 'country' | 'personal' | 'documents' | 'image' | 'review'; 
+export type StepType = 'country' | 'region' | 'visa' | 'postalCode' | 'documents' | 'image' | 'review'; 

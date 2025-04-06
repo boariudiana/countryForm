@@ -79,7 +79,7 @@ export const api = {
       }
 
       const countryGeonameId = countrySearch.data.geonames[0].geonameId;
-      console.log(`GeonameId for ${countryCode}:`, countryGeonameId);
+
 
       // Now get the subdivisions using the country's geonameId
       const response = await axios.get<GeonamesResponse>(`http://api.geonames.org/childrenJSON`, {
@@ -89,8 +89,6 @@ export const api = {
           style: 'FULL'
         }
       });
-      
-      console.log('Geonames response:', response.data);
       
       if (!response.data.geonames || response.data.geonames.length === 0) {
         throw new Error(`No subdivisions found for ${countryCode}`);
