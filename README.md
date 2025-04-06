@@ -17,14 +17,14 @@
 
 ## Running the Application
 
-Development:
-```bash
-npm run dev
-```
-
 Build:
 ```bash
 npm run build
+```
+
+Development:
+```bash
+npm run dev
 ```
 
 ## Environment Variables

@@ -1,5 +1,5 @@
 import { Button, Form, Layout, Space, Steps, message } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './App.module.css';
 import CountryStep from './components/steps/CountryStep';
 import VisaStep from './components/steps/VisaStep';
@@ -13,9 +13,25 @@ import PostalCodeStep from './components/steps/PostalCodeStep';
 
 const { Content } = Layout;
 
+const FORM_STORAGE_KEY = 'countryFormData';
+
 export default function App() {
   const [form] = Form.useForm<FormData>();
   const [currentStep, setCurrentStep] = useState(0);
+
+  // Load saved form data on component mount
+  useEffect(() => {
+    const savedData = localStorage.getItem(FORM_STORAGE_KEY);
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        form.setFieldsValue(parsedData);
+      } catch (error) {
+        console.error('Error loading saved form data:', error);
+        localStorage.removeItem(FORM_STORAGE_KEY);
+      }
+    }
+  }, [form]);
 
   const currentCountry = form.getFieldValue('countryCode');
 
@@ -28,11 +44,15 @@ export default function App() {
     message.success('Form submitted successfully!');
     form.resetFields();
     setCurrentStep(0);
+    localStorage.removeItem(FORM_STORAGE_KEY); // Clear saved data on successful submission
   };
 
   const next = async () => {
     try {
       await form.validateFields();
+      // Save form data to local storage before moving to next step
+      const formData = form.getFieldsValue(true);
+      localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formData));
       setCurrentStep(prev => prev + 1);
     } catch (error) {
       console.error('Validation failed:', error);
@@ -40,6 +60,9 @@ export default function App() {
   };
 
   const prev = () => {
+    // Save form data to local storage before moving to previous step
+    const formData = form.getFieldsValue(true);
+    localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formData));
     setCurrentStep(prev => prev - 1);
   };
 
