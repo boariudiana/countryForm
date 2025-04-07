@@ -2,9 +2,6 @@ import axios from 'axios';
 import { COUNTRIES } from '../config/countries';
 import env from '../config/env';
 
-// Simulating API delay
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 const BASE_URL = 'https://restcountries.com/v3.1';
 
 export interface Country {
@@ -35,22 +32,35 @@ interface GeonamesResponse {
 
 export const api = {
   getCountries: async () => {
-    await delay(1000); // Simulate network delay
-    return {
-      data: COUNTRIES,
-      status: 200,
-      statusText: 'OK',
-      headers: {
-        'content-type': 'application/json',
-      },
-      config: {
-        url: '/api/countries',
-        method: 'get',
-        headers: {
-          Accept: 'application/json',
-        },
-      },
-    };
+    try {
+      const requiredCountryCodes = ['US', 'AE', 'IN', 'DE', 'CA'];
+      const response = await axios.get(`${BASE_URL}/alpha`, {
+        params: {
+          codes: requiredCountryCodes.join(',')
+        }
+      });
+
+      // Map the response to match our COUNTRIES format
+      const mappedCountries = response.data.map((country: Country) => {
+        const configCountry = COUNTRIES.find(c => c.code === country.cca2);
+        return {
+          code: country.cca2,
+          name: country.name.common,
+          fields: configCountry?.fields || {}
+        };
+      });
+
+      return {
+        data: mappedCountries,
+        status: 200,
+        statusText: 'OK',
+        headers: response.headers,
+        config: response.config
+      };
+    } catch (error) {
+      console.error('Error fetching countries:', error);
+      throw error;
+    }
   },
   getCountry: async (countryCode: string): Promise<Country> => {
     const response = await axios.get(`${BASE_URL}/alpha/${countryCode}`);

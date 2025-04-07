@@ -16,12 +16,10 @@ const REGIONS = {
 
 
 export const useCountries = () => {
-  return useQuery<Country[]>({
+  return useQuery({
     queryKey: [COUNTRY.LIST],
-    queryFn: async () => {
-      const response = await api.getCountries();
-      return response.data;
-    }
+    queryFn: async () => await api.getCountries()
+      
   });
 };
 
