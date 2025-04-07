@@ -6,7 +6,7 @@ import VisaStep from './components/steps/VisaStep';
 import DocumentsStep from './components/steps/DocumentsStep';
 import ProfileImageStep from './components/steps/ProfileImageStep';
 import ReviewStep from './components/steps/ReviewStep';
-import type { FormData, StepType } from './types/form';
+import type { FormData } from './types/form';
 import RegionStep from './components/steps/RegionStep';
 import { COUNTRIES } from './config/countries';
 import PostalCodeStep from './components/steps/PostalCodeStep';
@@ -67,13 +67,13 @@ export default function App() {
   };
 
   const progressBarSteps = [
-    { title: 'Country', key: 'country' as const },
-    { title: 'Region', key: 'region' as const },
-    shouldRenderVisaStep && { title: 'Visa', key: 'visa' as const },
-    shouldRenderPostalCodeStep && { title: 'Postal Code', key: 'postalcode' as const },
-    { title: 'Documents', key: 'documents' as const },
-    { title: 'Profile Image', key: 'image' as const },
-    { title: 'Review', key: 'review' as const }
+    { title: 'Country', key: 'country'  },
+    { title: 'Region', key: 'region' },
+    shouldRenderVisaStep && { title: 'Visa', key: 'visa'  },
+    shouldRenderPostalCodeStep && { title: 'Postal Code', key: 'postalcode'  },
+    { title: 'Documents', key: 'documents'  },
+    { title: 'Profile Image', key: 'image' },
+    { title: 'Review', key: 'review'  }
   ].filter(Boolean)
 
   const steps = [
@@ -96,7 +96,7 @@ export default function App() {
             <Space direction="vertical" size={36}>
               <Steps
                 current={currentStep}
-                items={progressBarSteps.map(({ title }) => ({ title }))}
+                items={progressBarSteps.filter(step => step !== undefined).map(({ title }) => ({ title }))}
                 responsive
                 labelPlacement="vertical"
               />
