@@ -1,4 +1,4 @@
-import { Button, Form, Layout, Space, Steps, message } from 'antd';
+import { Button, Form, Layout, Space, Steps, message, ConfigProvider } from 'antd';
 import { useState, useEffect } from 'react';
 import styles from './App.module.css';
 import CountryStep from './components/steps/CountryStep';
@@ -66,7 +66,6 @@ export default function App() {
     setCurrentStep(prev => prev - 1);
   };
 
-
   const progressBarSteps: { title: string; key: StepType }[] = [
     { title: 'Country', key: 'country' },
     { title: 'Region', key: 'region' },
@@ -90,52 +89,54 @@ export default function App() {
   const currentStepConfig = steps[currentStep];
 
   return (
-    <div className={styles.root}>
-      <Layout className={styles.container}>
-      <Content className={styles.content}>
-        <Space direction="vertical" size={36}>
-          <Steps
-            current={currentStep}
-            items={progressBarSteps.map(({ title }) => ({ title }))}
-            responsive
-            labelPlacement="vertical"
-          />
-          <div className={styles.card}>
-          <Form 
-            form={form} 
-            onFinish={handleFinish} 
-            layout="vertical"
-            initialValues={{ 
-              personalInfo: {},
-              countryCode: undefined,
-              profileImage: []
-            }}
-            preserve={true}
-          >
-            <div>
-              {currentStepConfig?.content}
-            </div>
-            <div className={styles.stepsAction}>
-              <Space>
-                {currentStep > 0 && (
-                  <Button onClick={prev}>Previous</Button>
-                )}
-                {currentStep < steps.length - 1 ? (
-                  <Button type="primary" onClick={next}>
-                    Next
-                  </Button>
-                ) : (
-                  <Button type="primary" onClick={() => form.submit()}>
-                    Submit
-                  </Button>
-                )}
-              </Space>
-            </div>
-          </Form>
-          </div>
-        </Space>
-      </Content>
-    </Layout>
-    </div>
+    <ConfigProvider>
+      <div className={styles.root}>
+        <Layout className={styles.container}>
+          <Content className={styles.content}>
+            <Space direction="vertical" size={36}>
+              <Steps
+                current={currentStep}
+                items={progressBarSteps.map(({ title }) => ({ title }))}
+                responsive
+                labelPlacement="vertical"
+              />
+              <div className={styles.card}>
+                <Form 
+                  form={form} 
+                  onFinish={handleFinish} 
+                  layout="vertical"
+                  initialValues={{ 
+                    personalInfo: {},
+                    countryCode: undefined,
+                    profileImage: []
+                  }}
+                  preserve={true}
+                >
+                  <div>
+                    {currentStepConfig?.content}
+                  </div>
+                  <div className={styles.stepsAction}>
+                    <Space>
+                      {currentStep > 0 && (
+                        <Button onClick={prev}>Previous</Button>
+                      )}
+                      {currentStep < steps.length - 1 ? (
+                        <Button type="primary" onClick={next}>
+                          Next
+                        </Button>
+                      ) : (
+                        <Button type="primary" onClick={() => form.submit()}>
+                          Submit
+                        </Button>
+                      )}
+                    </Space>
+                  </div>
+                </Form>
+              </div>
+            </Space>
+          </Content>
+        </Layout>
+      </div>
+    </ConfigProvider>
   );
 }

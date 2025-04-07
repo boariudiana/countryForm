@@ -19,9 +19,9 @@ export const useCountries = () => {
   return useQuery<Country[]>({
     queryKey: [COUNTRY.LIST],
     queryFn: async () => {
-      const {data} = await api.getCountries();
-      return [...data];
-    },
+      const response = await api.getCountries();
+      return response.data;
+    }
   });
 };
 

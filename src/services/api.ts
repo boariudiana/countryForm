@@ -89,7 +89,7 @@ export const api = {
           style: 'FULL'
         }
       });
-      
+    
       if (!response.data.geonames || response.data.geonames.length === 0) {
         throw new Error(`No subdivisions found for ${countryCode}`);
       }
