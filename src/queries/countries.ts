@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
-import type { COUNTRIES } from '../config/countries';
 import { CountryCode } from '../types/form';
 
-type Country = typeof COUNTRIES[number];
 
 const COUNTRY = {
   LIST: 'countries-list',
