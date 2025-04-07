@@ -19,7 +19,6 @@ export default function App() {
   const [form] = Form.useForm<FormData>();
   const [currentStep, setCurrentStep] = useState(0);
 
-  // Load saved form data on component mount
   useEffect(() => {
     const savedData = localStorage.getItem(FORM_STORAGE_KEY);
     if (savedData) {
@@ -44,7 +43,7 @@ export default function App() {
     message.success('Form submitted successfully!');
     form.resetFields();
     setCurrentStep(0);
-    localStorage.removeItem(FORM_STORAGE_KEY); // Clear saved data on successful submission
+    localStorage.removeItem(FORM_STORAGE_KEY);
   };
 
   const next = async () => {
@@ -87,6 +86,7 @@ export default function App() {
   ].filter(Boolean)
 
   const currentStepConfig = steps[currentStep];
+
 
   return (
     <ConfigProvider>
