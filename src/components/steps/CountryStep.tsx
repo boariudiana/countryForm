@@ -1,9 +1,9 @@
 import { Form, Select } from 'antd';
 import { useCountries } from '../../queries/countries';
-
+import type { CustomCountry } from '../../services/api';
 
 const CountryStep = () => {
-  const { data: countries, isLoading } = useCountries();
+  const { data: {data: countries} = {}, isLoading } = useCountries();
 
   return (
     <Form.Item
@@ -14,7 +14,7 @@ const CountryStep = () => {
       <Select
         placeholder="Select a country"
         loading={isLoading}
-        options={countries?.map(country => ({
+        options={countries?.map((country: CustomCountry) => ({
           label: country.name,
           value: country.code
         }))}

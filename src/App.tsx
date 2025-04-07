@@ -66,25 +66,25 @@ export default function App() {
     setCurrentStep(prev => prev - 1);
   };
 
-  const progressBarSteps: { title: string; key: StepType }[] = [
-    { title: 'Country', key: 'country' },
-    { title: 'Region', key: 'region' },
-    ...(shouldRenderVisaStep ? [{ title: 'Visa', key: 'visa' as const }] : []),
-    ...(shouldRenderPostalCodeStep ? [{ title: 'Postal Code', key: 'postalCode' as const }] : []),
-    { title: 'Documents', key: 'documents' },
-    { title: 'Profile Image', key: 'image' },
-    { title: 'Review', key: 'review' },
-  ];
+  const progressBarSteps = [
+    { title: 'Country', key: 'country' as const },
+    { title: 'Region', key: 'region' as const },
+    shouldRenderVisaStep && { title: 'Visa', key: 'visa' as const },
+    shouldRenderPostalCodeStep && { title: 'Postal Code', key: 'postalcode' as const },
+    { title: 'Documents', key: 'documents' as const },
+    { title: 'Profile Image', key: 'image' as const },
+    { title: 'Review', key: 'review' as const }
+  ].filter(Boolean)
 
   const steps = [
     { title: 'Country', content: <CountryStep /> },
     { title: 'Region', content: <RegionStep /> },
-    ...(shouldRenderVisaStep ? [{ title: 'Visa', content: <VisaStep /> }] : []),
-    ...(shouldRenderPostalCodeStep ? [{ title: 'Postal Code', content: <PostalCodeStep /> }] : []),
+    shouldRenderVisaStep && { title: 'Visa', content: <VisaStep /> },
+    shouldRenderPostalCodeStep && { title: 'Postal Code', content: <PostalCodeStep /> },
     { title: 'Documents', content: <DocumentsStep /> },
     { title: 'Profile Image', content: <ProfileImageStep /> },
     { title: 'Review', content: <ReviewStep /> }
-  ];
+  ].filter(Boolean)
 
   const currentStepConfig = steps[currentStep];
 

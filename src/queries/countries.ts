@@ -16,8 +16,7 @@ const REGIONS = {
 export const useCountries = () => {
   return useQuery({
     queryKey: [COUNTRY.LIST],
-    queryFn: async () => await api.getCountries()
-      
+    queryFn: async () => await api.getCountries(),
   });
 };
 

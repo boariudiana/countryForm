@@ -1,10 +1,11 @@
-import axios from 'axios';
+import axios, { AxiosResponseHeaders, RawAxiosResponseHeaders, InternalAxiosRequestConfig } from 'axios';
 import { COUNTRIES } from '../config/countries';
 import env from '../config/env';
+import type { Rule } from 'antd/es/form';
 
 const BASE_URL = 'https://restcountries.com/v3.1';
 
-export interface Country {
+export interface RestCountry {
   name: {
     common: string;
     official: string;
@@ -12,6 +13,27 @@ export interface Country {
   cca2: string; // ISO 3166-1 alpha-2 code (e.g., 'US', 'AE')
   region: string;
   subregion: string;
+}
+
+export interface CustomCountry {
+  code: string;
+  name: string;
+  fields: {
+    [key: string]: {
+      name: string;
+      label: string;
+      rules: Rule[];
+      type?: string;
+    };
+  };
+}
+
+export interface ApiResponse<T> {
+  data: T;
+  status: number;
+  statusText: string;
+  headers: AxiosResponseHeaders | RawAxiosResponseHeaders;
+  config: InternalAxiosRequestConfig;
 }
 
 export interface Region {
@@ -31,17 +53,17 @@ interface GeonamesResponse {
 }
 
 export const api = {
-  getCountries: async () => {
+  getCountries: async (): Promise<ApiResponse<CustomCountry[]>> => {
     try {
       const requiredCountryCodes = ['US', 'AE', 'IN', 'DE', 'CA'];
-      const response = await axios.get(`${BASE_URL}/alpha`, {
+      const response = await axios.get<RestCountry[]>(`${BASE_URL}/alpha`, {
         params: {
           codes: requiredCountryCodes.join(',')
         }
       });
 
       // Map the response to match our COUNTRIES format
-      const mappedCountries = response.data.map((country: Country) => {
+      const mappedCountries: CustomCountry[] = response.data.map((country: RestCountry) => {
         const configCountry = COUNTRIES.find(c => c.code === country.cca2);
         return {
           code: country.cca2,
@@ -62,7 +84,7 @@ export const api = {
       throw error;
     }
   },
-  getCountry: async (countryCode: string): Promise<Country> => {
+  getCountry: async (countryCode: string): Promise<RestCountry> => {
     const response = await axios.get(`${BASE_URL}/alpha/${countryCode}`);
     return response.data[0];
   },
