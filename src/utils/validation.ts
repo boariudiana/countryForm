@@ -1,11 +1,27 @@
 import validator from 'validator';
 import { stdnum } from 'stdnum';
 import { Rule } from 'antd/es/form';
-import { isValidEmiratesID } from 'id-validator';
+
+// Simple pattern for Emirates ID with explicit character set
+const EMIRATES_ID_PATTERN = /^784-[0-9]{4}-[0-9]{7}-[0-9]$/;
+const MAX_ID_LENGTH = 20;
+
+/**
+ * Validates an Emirates ID number
+ */
+const validateEmiratesId = (id: string): boolean => {
+  // Basic input validation
+  if (!id || typeof id !== 'string') return false;
+  
+  // Length check before regex test to prevent ReDoS
+  if (id.length > MAX_ID_LENGTH) return false;
+  
+  return EMIRATES_ID_PATTERN.test(id);
+};
 
 export const validationRules = {
   ssn: (value: string) => stdnum.US.ssn.validate(value).isValid,
-  emiratesId: (value: string) => isValidEmiratesID(value),
+  emiratesId: validateEmiratesId,
   aadhaar: (value: string) => stdnum.IN.aadhaar.validate(value).isValid,
   taxId: (value: string) => stdnum.DE.idnr.validate(value).isValid,
   sin: (value: string) => stdnum.CA.sin.validate(value).isValid,
@@ -18,7 +34,7 @@ export const validationRules = {
 export const getValidationMessage = (fieldName: string): string => {
   const messages: Record<string, string> = {
     ssn: 'Please enter a valid SSN (e.g., 123-45-6789)',
-    emiratesId: 'Please enter a valid Emirates ID (e.g., 784-1980-1234567-1) - Must start with 784 and be 15 digits total',
+    emiratesId: 'Please enter a valid Emirates ID (e.g., 784-1980-1234567-1)',
     aadhaar: 'Please enter a valid 12-digit Aadhaar number (e.g., 234123412346)',
     taxId: 'Please enter a valid 11-digit Tax ID (e.g., 36 574 261 809)',
     sin: 'Please enter a valid SIN (e.g., 123-456-789)',
@@ -29,13 +45,14 @@ export const getValidationMessage = (fieldName: string): string => {
   };
 
   return messages[fieldName] || 'Invalid value';
-}; 
+};
 
 export const createValidator = (ruleName: keyof typeof validationRules) => {
   return (_: Rule, value: string) => {
     if (!value) return Promise.reject(new Error('Value is required'));
+    
     return validationRules[ruleName](value) 
       ? Promise.resolve() 
-      : Promise.reject(new Error('Invalid value'));
+      : Promise.reject(new Error(getValidationMessage(ruleName)));
   };
 }; 
